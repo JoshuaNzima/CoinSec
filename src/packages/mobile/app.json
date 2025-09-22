@@ -1,0 +1,68 @@
+{
+  "expo": {
+    "name": "GuardForce Mobile",
+    "slug": "guardforce-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#030213"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.guardservices.mobile",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app needs location access to track guard positions and ensure safety.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app needs location access to track guard positions and ensure safety.",
+        "NSCameraUsageDescription": "This app needs camera access to capture incident photos and scan QR codes.",
+        "NSMicrophoneUsageDescription": "This app needs microphone access to record incident audio."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#030213"
+      },
+      "package": "com.guardservices.mobile",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "RECORD_AUDIO",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow GuardForce to use your location for safety tracking and incident reporting.",
+          "isAndroidBackgroundLocationEnabled": true
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow GuardForce to access your camera for incident reporting and QR code scanning."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#030213"
+        }
+      ]
+    ]
+  }
+}

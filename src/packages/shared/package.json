@@ -1,0 +1,22 @@
+{
+  "name": "@guard-services/shared",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared utilities, types, and services for Guard Services applications",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.5",
+    "sonner": "^2.0.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.10.5"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "guard-services-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Guard Services Management System - Mobile & Web Applications",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:web\" \"npm run dev:mobile\"",
+    "dev:web": "npm run dev --workspace=@guard-services/web",
+    "dev:mobile": "npm run start --workspace=@guard-services/mobile",
+    "build": "npm run build --workspace=@guard-services/web",
+    "build:web": "npm run build --workspace=@guard-services/web",
+    "build:mobile": "npm run build --workspace=@guard-services/mobile",
+    "lint": "npm run lint --workspaces",
+    "type-check": "npm run type-check --workspaces",
+    "clean": "npm run clean --workspaces",
+    "setup": "npm install && npm run setup --workspaces"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.3.3",
+    "@types/node": "^20.10.5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
