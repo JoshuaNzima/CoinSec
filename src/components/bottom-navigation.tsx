@@ -12,6 +12,7 @@ import {
   TrendingUp,
   Settings,
   Camera,
+  Users,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
@@ -40,7 +41,10 @@ export function BottomNavigation({
     ];
 
     // Add role-specific items
-    if (user?.role !== "hr") {
+    if (user?.role === "cctv_operator") {
+      // For CCTV operators, prioritize CCTV access in main nav
+      baseItems.splice(1, 0, { id: "cctv", label: "CCTV", icon: Camera });
+    } else if (user?.role !== "hr") {
       baseItems.splice(
         1,
         0,
@@ -67,12 +71,21 @@ export function BottomNavigation({
       { id: "settings", label: "Settings", icon: Settings },
     ];
 
-    // Add CCTV for supervisors and admins
-    if (user?.role === "supervisor" || user?.role === "admin") {
+    // Add CCTV for supervisors and admins (CCTV operators already have it in main nav)
+    if ((user?.role === "supervisor" || user?.role === "admin") && user?.role !== "cctv_operator") {
       items.unshift({
         id: "cctv",
         label: "CCTV",
         icon: Camera,
+      });
+    }
+
+    // Add Client Assignments for supervisors and admins
+    if (user?.role === "supervisor" || user?.role === "admin") {
+      items.unshift({
+        id: "assignments",
+        label: "Assignments",
+        icon: Users,
       });
     }
 

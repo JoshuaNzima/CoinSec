@@ -3,6 +3,7 @@ import { ThemeProvider } from './contexts/theme-context';
 import { AuthProvider, useAuth } from './contexts/auth-context';
 import { useScreenSize } from './hooks/use-screen-size';
 import { projectId, publicAnonKey } from './utils/supabase/info';
+import { formatCompactCurrency, convertUSDToMWK } from './utils/locale';
 
 // Essential UI components
 import { Button } from "./components/ui/button";
@@ -31,6 +32,8 @@ import { NonSmartphoneSolutions } from './components/non-smartphone-solutions';
 import { AttendanceStation } from './components/attendance-station';
 import { CCTVDashboard } from './components/cctv-dashboard';
 import { MobileCCTV } from './components/mobile-cctv';
+import { CCTVOperatorDashboard } from './components/cctv-operator-dashboard';
+import { ClientAssignments } from './components/client-assignments-simple';
 
 function SimpleAdminDashboard() {
   const [currentView, setCurrentView] = useState('overview');
@@ -39,11 +42,18 @@ function SimpleAdminDashboard() {
     return <CCTVDashboard onNavigate={setCurrentView} />;
   }
   
+  if (currentView === 'assignments') {
+    return <ClientAssignments />;
+  }
+  
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Admin Dashboard</h1>
         <div className="flex gap-2">
+          <Button onClick={() => setCurrentView('assignments')} variant="outline">
+            Client Assignments
+          </Button>
           <Button onClick={() => setCurrentView('cctv')} variant="outline">
             CCTV Control Center
           </Button>
@@ -95,7 +105,7 @@ function SimpleAdminDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-sm font-medium text-muted-foreground">Monthly Revenue</h3>
-              <p className="text-3xl font-bold text-purple-600">$245K</p>
+              <p className="text-3xl font-bold text-purple-600">{formatCompactCurrency(convertUSDToMWK(245000))}</p>
               <p className="text-sm text-green-600">+12% vs last month</p>
             </div>
             <div className="p-3 bg-purple-100 rounded-full">
@@ -111,7 +121,7 @@ function SimpleAdminDashboard() {
           <h3 className="text-lg font-semibold mb-4">Guard Deployment</h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span>Downtown Plaza</span>
+              <span>City Centre Lilongwe</span>
               <div className="flex items-center gap-2">
                 <div className="w-32 bg-gray-200 rounded-full h-2">
                   <div className="bg-blue-600 h-2 rounded-full" style={{width: '75%'}}></div>
@@ -120,7 +130,7 @@ function SimpleAdminDashboard() {
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span>Corporate Center</span>
+              <span>Capital Hill Complex</span>
               <div className="flex items-center gap-2">
                 <div className="w-32 bg-gray-200 rounded-full h-2">
                   <div className="bg-green-600 h-2 rounded-full" style={{width: '60%'}}></div>
@@ -129,7 +139,7 @@ function SimpleAdminDashboard() {
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span>Shopping Mall</span>
+              <span>Lilongwe Shopping Centre</span>
               <div className="flex items-center gap-2">
                 <div className="w-32 bg-gray-200 rounded-full h-2">
                   <div className="bg-purple-600 h-2 rounded-full" style={{width: '90%'}}></div>
@@ -145,15 +155,15 @@ function SimpleAdminDashboard() {
           <div className="space-y-4">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Total Revenue</span>
-              <span className="font-semibold">$245,000</span>
+              <span className="font-semibold">MK{convertUSDToMWK(245000).toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Operating Costs</span>
-              <span className="font-semibold">$185,000</span>
+              <span className="font-semibold">MK{convertUSDToMWK(185000).toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Net Profit</span>
-              <span className="font-semibold text-green-600">$60,000</span>
+              <span className="font-semibold text-green-600">MK{convertUSDToMWK(60000).toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Profit Margin</span>
@@ -173,7 +183,7 @@ function SimpleAdminDashboard() {
             </div>
             <div className="flex-1">
               <p className="font-medium">New contract signed</p>
-              <p className="text-sm text-muted-foreground">Medical Center - $45,000/month</p>
+              <p className="text-sm text-muted-foreground">Kamuzu Central Hospital - MK{convertUSDToMWK(45000).toLocaleString()}/month</p>
             </div>
             <span className="text-sm text-muted-foreground">2 hours ago</span>
           </div>
@@ -224,7 +234,7 @@ function SimpleHRDashboard() {
         </div>
         <div className="bg-card p-6 rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-2">Avg. Salary</h3>
-          <p className="text-3xl font-bold text-purple-600">$48.5K</p>
+          <p className="text-3xl font-bold text-purple-600">{formatCompactCurrency(convertUSDToMWK(48500))}</p>
         </div>
       </div>
     </div>
@@ -278,12 +288,19 @@ function AppContent() {
       return <SimpleAdminDashboard />;
     } else if (user.role === 'hr') {
       return <HRDashboard />;
+    } else if (user.role === 'cctv_operator') {
+      return <CCTVOperatorDashboard />;
     }
   }
   
   // For HR users on mobile, show HR dashboard
   if (user.role === 'hr') {
     return <HRDashboard />;
+  }
+  
+  // For CCTV operators on mobile, show CCTV dashboard
+  if (user.role === 'cctv_operator') {
+    return <CCTVOperatorDashboard />;
   }
 
   const renderCurrentView = () => {
@@ -326,11 +343,11 @@ function AppContent() {
       case 'attendance':
         return <GuardAttendanceManager />;
       case 'cctv':
-        return user.role === 'supervisor' || user.role === 'admin' ? 
+        return user.role === 'supervisor' || user.role === 'admin' || user.role === 'cctv_operator' ? 
           <MobileCCTV onNavigate={setCurrentView} /> : 
           <div className="p-4 text-center">
             <div className="text-red-500 mb-2">Access Denied</div>
-            <div className="text-sm text-muted-foreground">CCTV access is restricted to supervisors and admins.</div>
+            <div className="text-sm text-muted-foreground">CCTV access is restricted to supervisors, CCTV operators, and admins.</div>
             <Button onClick={() => setCurrentView('dashboard')} className="mt-4" variant="outline">
               Return to Dashboard
             </Button>
@@ -349,6 +366,16 @@ function AppContent() {
         return <SimpleComponent title="Equipment Tracking" onNavigate={setCurrentView} />;
       case 'analytics':
         return <SimpleComponent title="Performance Analytics" onNavigate={setCurrentView} />;
+      case 'assignments':
+        return (user.role === 'admin' || user.role === 'supervisor') ? 
+          <ClientAssignments /> : 
+          <div className="p-4 text-center">
+            <div className="text-red-500 mb-2">Access Denied</div>
+            <div className="text-sm text-muted-foreground">Assignment management is restricted to supervisors and admins.</div>
+            <Button onClick={() => setCurrentView('dashboard')} className="mt-4" variant="outline">
+              Return to Dashboard
+            </Button>
+          </div>;
       case 'training':
         return <SimpleComponent title="Training Compliance" onNavigate={setCurrentView} />;
       case 'weather':
@@ -456,15 +483,17 @@ function SimpleRoleSwitcher() {
   
   if (!user) return null;
   
-  const switchRole = (newRole: 'guard' | 'supervisor' | 'admin' | 'hr') => {
+  const switchRole = (newRole: 'guard' | 'supervisor' | 'admin' | 'hr' | 'cctv_operator') => {
     updateProfile({ 
       role: newRole,
       name: newRole === 'admin' ? 'Admin User' : 
             newRole === 'supervisor' ? 'Supervisor User' : 
-            newRole === 'hr' ? 'HR Manager' : 'Guard User',
+            newRole === 'hr' ? 'HR Manager' : 
+            newRole === 'cctv_operator' ? 'CCTV Operator' : 'Guard User',
       badge: newRole === 'admin' ? 'ADM-001' : 
              newRole === 'supervisor' ? 'SUP-001' : 
-             newRole === 'hr' ? 'HR-001' : 'GRD-001'
+             newRole === 'hr' ? 'HR-001' : 
+             newRole === 'cctv_operator' ? 'CCTV-001' : 'GRD-001'
     });
     window.location.reload();
   };
@@ -472,7 +501,7 @@ function SimpleRoleSwitcher() {
   return (
     <div className="fixed bottom-4 left-4 z-50 bg-card p-3 rounded-lg shadow-lg">
       <div className="text-xs mb-2 font-medium">Demo: Switch Role</div>
-      <div className="grid grid-cols-2 gap-1">
+      <div className="grid grid-cols-3 gap-1">
         <Button
           size="sm"
           variant={user.role === 'guard' ? 'default' : 'outline'}
@@ -491,6 +520,14 @@ function SimpleRoleSwitcher() {
         </Button>
         <Button
           size="sm"
+          variant={user.role === 'cctv_operator' ? 'default' : 'outline'}
+          onClick={() => switchRole('cctv_operator')}
+          className="text-xs px-2 py-1"
+        >
+          📹 CCTV
+        </Button>
+        <Button
+          size="sm"
           variant={user.role === 'hr' ? 'default' : 'outline'}
           onClick={() => switchRole('hr')}
           className="text-xs px-2 py-1"
@@ -501,7 +538,7 @@ function SimpleRoleSwitcher() {
           size="sm"
           variant={user.role === 'admin' ? 'default' : 'outline'}
           onClick={() => switchRole('admin')}
-          className="text-xs px-2 py-1"
+          className="text-xs px-2 py-1 col-span-2"
         >
           ⚙️ Admin
         </Button>

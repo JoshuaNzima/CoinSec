@@ -85,12 +85,18 @@ class CheckpointService {
         toast.success(`Checkpoint ${checkpointId} scanned successfully`);
         return scan;
       } catch (apiError) {
-        // Create mock scan for demo purposes
-        const mockScan = this.createMockScan(scanData);
-        this.saveScanLocally(mockScan);
+        // Check if we're in demo mode
+        const localUser = localStorage.getItem('guard-app-user');
+        if (localUser) {
+          // Create mock scan for demo purposes
+          const mockScan = this.createMockScan(scanData);
+          this.saveScanLocally(mockScan);
 
-        toast.success(`Checkpoint ${checkpointId} scanned successfully (demo mode)`);
-        return mockScan;
+          toast.success(`Checkpoint ${checkpointId} scanned successfully (demo mode)`);
+          return mockScan;
+        } else {
+          throw apiError; // Re-throw if not in demo mode
+        }
       }
     } catch (error) {
       console.error('Failed to scan checkpoint:', error);
@@ -105,7 +111,7 @@ class CheckpointService {
       const { scans } = await apiCall('/checkpoints/scans');
       return scans || [];
     } catch (error) {
-      console.error('Failed to fetch checkpoint scans:', error);
+      console.log('Using mock data for checkpoint scans:', error.message);
       // Return mock data for demo purposes
       return this.getMockCheckpointScans();
     }

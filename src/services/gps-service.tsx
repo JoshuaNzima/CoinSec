@@ -116,16 +116,25 @@ class GPSService {
         body: JSON.stringify(locationData)
       });
     } catch (error) {
-      console.error('Failed to update location on server:', error);
-      // Store location locally for demo purposes
-      const localLocations = JSON.parse(localStorage.getItem('demo-locations') || '[]');
-      localLocations.push({
-        ...locationData,
-        user_id: 'current-user',
-        timestamp: new Date().toISOString()
-      });
-      localStorage.setItem('demo-locations', JSON.stringify(localLocations.slice(-50))); // Keep last 50 locations
-      // Don't show error toast for location updates to avoid spam
+      // Check if we're in demo mode
+      const localUser = localStorage.getItem('guard-app-user');
+      if (localUser) {
+        // Store location locally for demo purposes
+        const localLocations = JSON.parse(localStorage.getItem('demo-locations') || '[]');
+        localLocations.push({
+          ...locationData,
+          user_id: 'current-user',
+          timestamp: new Date().toISOString()
+        });
+        localStorage.setItem('demo-locations', JSON.stringify(localLocations.slice(-50))); // Keep last 50 locations
+        console.log('Location stored locally in demo mode');
+      } else {
+        console.error('Failed to update location on server:', error);
+        // Only show toast for real auth errors, not demo mode
+        if (!error.message.includes('Demo mode')) {
+          toast.error('Failed to update location');
+        }
+      }
     }
   }
 
@@ -152,8 +161,8 @@ class GPSService {
       const { locations } = await apiCall('/gps/locations');
       return locations || [];
     } catch (error) {
-      console.error('Failed to fetch locations:', error);
-      // Return mock data for demo purposes
+      console.log('Using mock data for locations:', error.message);
+      // Return mock data for demo purposes - don't log as error
       return this.getMockLocations();
     }
   }
@@ -163,8 +172,8 @@ class GPSService {
       const { history } = await apiCall(`/gps/history/${userId}`);
       return history || [];
     } catch (error) {
-      console.error('Failed to fetch location history:', error);
-      // Return mock data for demo purposes
+      console.log('Using mock data for location history:', error.message);
+      // Return mock data for demo purposes - don't log as error
       return this.getMockLocationHistory(userId);
     }
   }

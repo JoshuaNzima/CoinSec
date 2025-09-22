@@ -6,7 +6,7 @@ interface User {
   id: string;
   name: string;
   email: string;
-  role: 'guard' | 'supervisor' | 'admin' | 'hr';
+  role: 'guard' | 'supervisor' | 'admin' | 'hr' | 'cctv_operator';
   badge: string;
   avatar?: string;
   shiftStart?: string;
@@ -138,21 +138,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Determine role based on email for demo purposes
-    let role: 'guard' | 'supervisor' | 'admin' | 'hr' = 'guard';
+    let role: 'guard' | 'supervisor' | 'admin' | 'hr' | 'cctv_operator' = 'guard';
     if (email.includes('admin') || email.includes('manager')) {
       role = 'admin';
     } else if (email.includes('supervisor')) {
       role = 'supervisor';
     } else if (email.includes('hr') || email.includes('human')) {
       role = 'hr';
+    } else if (email.includes('cctv') || email.includes('operator') || email.includes('security')) {
+      role = 'cctv_operator';
     }
     
     const mockUser: User = {
-      id: role === 'admin' ? 'admin-1' : role === 'hr' ? 'hr-1' : '1',
-      name: role === 'admin' ? 'Admin User' : role === 'hr' ? 'HR Manager' : 'John Doe',
+      id: role === 'admin' ? 'admin-1' : role === 'hr' ? 'hr-1' : role === 'cctv_operator' ? 'cctv-1' : '1',
+      name: role === 'admin' ? 'Admin User' : 
+            role === 'hr' ? 'HR Manager' : 
+            role === 'cctv_operator' ? 'CCTV Operator' : 
+            role === 'supervisor' ? 'Security Supervisor' : 'John Doe',
       email: email,
       role: role,
-      badge: role === 'admin' ? 'ADM-001' : role === 'hr' ? 'HR-001' : 'GRD-001',
+      badge: role === 'admin' ? 'ADM-001' : 
+             role === 'hr' ? 'HR-001' : 
+             role === 'cctv_operator' ? 'CCTV-001' : 
+             role === 'supervisor' ? 'SUP-001' : 'GRD-001',
       avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
       shiftStart: '08:00',
       shiftEnd: '20:00',

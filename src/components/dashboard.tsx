@@ -113,6 +113,11 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       { id: 'sync', label: 'Offline Sync', icon: Settings, description: 'Manage offline data synchronization' },
     ];
 
+    // Add client assignments for supervisors and admins
+    if (user?.role === 'supervisor' || user?.role === 'admin') {
+      baseFeatures.unshift({ id: 'assignments', label: 'Client Assignments', icon: Users, description: 'Manage guard and canine assignments to clients' });
+    }
+
     // Add audit trail for supervisors and admins
     if (user?.role === 'supervisor' || user?.role === 'admin') {
       baseFeatures.push({ id: 'audit', label: 'Audit Trail', icon: FileText, description: 'View security audit logs' });

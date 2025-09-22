@@ -12,25 +12,45 @@ export const API_BASE_URL = `https://${projectId}.supabase.co/functions/v1/make-
 
 // Helper function to make authenticated API calls
 export async function apiCall(endpoint: string, options: RequestInit = {}) {
-  const { data: { session } } = await supabase.auth.getSession();
-  
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${session?.access_token || publicAnonKey}`,
-    ...options.headers,
-  };
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    // If no session and we're in demo mode (user stored locally), skip API call
+    const localUser = localStorage.getItem('guard-app-user');
+    if (!session && localUser) {
+      // Return mock data or throw specific error for demo mode
+      console.log('Demo mode: Skipping API call for', endpoint);
+      throw new Error('Demo mode - API call skipped');
+    }
+    
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session?.access_token || publicAnonKey}`,
+      ...options.headers,
+    };
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    ...options,
-    headers,
-  });
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      ...options,
+      headers,
+    });
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-    throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+      throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    // Log the error but don't show it to user if in demo mode
+    const localUser = localStorage.getItem('guard-app-user');
+    if (localUser && error.message.includes('Demo mode')) {
+      console.log('API call skipped in demo mode:', endpoint);
+      throw error; // Re-throw for services to handle with mock data
+    }
+    
+    // For real auth errors, still throw
+    throw error;
   }
-
-  return response.json();
 }
 
 // Helper function for file uploads

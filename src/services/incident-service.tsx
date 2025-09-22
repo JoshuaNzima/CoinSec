@@ -86,11 +86,17 @@ class IncidentService {
         toast.success('Incident reported successfully');
         return incident;
       } catch (apiError) {
-        // For demo purposes, create a mock incident and store locally
-        const mockIncident = this.createMockIncident(payload);
-        this.saveIncidentLocally(mockIncident);
-        toast.success('Incident reported successfully (demo mode)');
-        return mockIncident;
+        // Check if we're in demo mode
+        const localUser = localStorage.getItem('guard-app-user');
+        if (localUser) {
+          // For demo purposes, create a mock incident and store locally
+          const mockIncident = this.createMockIncident(payload);
+          this.saveIncidentLocally(mockIncident);
+          toast.success('Incident reported successfully (demo mode)');
+          return mockIncident;
+        } else {
+          throw apiError; // Re-throw if not in demo mode
+        }
       }
     } catch (error) {
       console.error('Failed to create incident:', error);
@@ -104,7 +110,7 @@ class IncidentService {
       const { incidents } = await apiCall('/incidents');
       return incidents || [];
     } catch (error) {
-      console.error('Failed to fetch incidents:', error);
+      console.log('Using mock data for incidents:', error.message);
       // Return mock data for demo purposes instead of showing error
       return this.getMockIncidents();
     }

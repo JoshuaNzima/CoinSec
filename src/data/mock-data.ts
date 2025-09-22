@@ -1,4 +1,5 @@
-// Comprehensive mock data for the guard services application
+// Comprehensive mock data for the guard services application (Malawi localized)
+import { convertUSDToMWK, formatMalawianPhone, malawianLocations } from '../utils/locale';
 
 export interface Employee {
   id: string;
@@ -92,6 +93,64 @@ export interface Expense {
   receipt?: string;
 }
 
+export interface Client {
+  id: string;
+  name: string;
+  contactPerson: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  contractValue: number;
+  contractStartDate: string;
+  contractEndDate: string;
+  status: 'active' | 'inactive' | 'pending';
+  requiresCanines: boolean;
+  sitesCount: number;
+  notes?: string;
+}
+
+export interface GuardResource {
+  id: string;
+  name: string;
+  badge: string;
+  role: string;
+  experience: number;
+  certifications: string[];
+  status: 'available' | 'assigned' | 'on_leave' | 'inactive';
+  location: string;
+  phoneNumber: string;
+  specializations: string[];
+}
+
+export interface Canine {
+  id: string;
+  name: string;
+  breed: string;
+  age: number;
+  handler: string;
+  certifications: string[];
+  status: 'available' | 'assigned' | 'training' | 'medical_leave';
+  specialization: string[];
+  lastVetCheck: string;
+}
+
+export interface Assignment {
+  id: string;
+  clientId: string;
+  guardIds: string[];
+  canineIds: string[];
+  siteName: string;
+  startDate: string;
+  endDate?: string;
+  shiftType: 'day' | 'night' | '24hour' | 'rotating';
+  status: 'active' | 'scheduled' | 'completed' | 'cancelled';
+  requirements: string;
+  budget: number;
+  createdBy: string;
+  createdAt: string;
+}
+
 // Mock Employees
 export const mockEmployees: Employee[] = [
   {
@@ -99,13 +158,13 @@ export const mockEmployees: Employee[] = [
     name: 'John Smith',
     role: 'guard',
     badge: 'GRD-001',
-    phone: '(555) 123-4567',
+    phone: formatMalawianPhone('0999123456'),
     email: 'john.smith@guardforce.com',
     hireDate: '2023-01-15',
-    salary: 45000,
+    salary: convertUSDToMWK(45000),
     status: 'active',
     certifications: ['Security Guard License', 'First Aid', 'CPR'],
-    site: 'Downtown Plaza',
+    site: 'City Centre Lilongwe',
     shift: 'Day Shift'
   },
   {
@@ -113,26 +172,26 @@ export const mockEmployees: Employee[] = [
     name: 'Sarah Johnson',
     role: 'supervisor',
     badge: 'SUP-001',
-    phone: '(555) 234-5678',
+    phone: formatMalawianPhone('0998234567'),
     email: 'sarah.johnson@guardforce.com',
     hireDate: '2022-08-20',
-    salary: 65000,
+    salary: convertUSDToMWK(65000),
     status: 'active',
     certifications: ['Supervisor Certification', 'Security Management', 'Conflict Resolution'],
-    site: 'Corporate Center'
+    site: 'Capital Hill Complex'
   },
   {
     id: '3',
     name: 'Mike Rodriguez',
     role: 'guard',
     badge: 'GRD-002',
-    phone: '(555) 345-6789',
+    phone: formatMalawianPhone('0997345678'),
     email: 'mike.rodriguez@guardforce.com',
     hireDate: '2023-03-10',
-    salary: 47000,
+    salary: convertUSDToMWK(47000),
     status: 'active',
     certifications: ['Security Guard License', 'Emergency Response'],
-    site: 'Shopping Mall',
+    site: 'Lilongwe Shopping Centre',
     shift: 'Night Shift'
   },
   {
@@ -140,10 +199,10 @@ export const mockEmployees: Employee[] = [
     name: 'Emily Davis',
     role: 'hr',
     badge: 'HR-001',
-    phone: '(555) 456-7890',
+    phone: formatMalawianPhone('0996456789'),
     email: 'emily.davis@guardforce.com',
     hireDate: '2021-11-05',
-    salary: 75000,
+    salary: convertUSDToMWK(75000),
     status: 'active',
     certifications: ['HR Certification', 'Payroll Management']
   },
@@ -152,10 +211,10 @@ export const mockEmployees: Employee[] = [
     name: 'David Wilson',
     role: 'admin',
     badge: 'ADM-001',
-    phone: '(555) 567-8901',
+    phone: formatMalawianPhone('0995567890'),
     email: 'david.wilson@guardforce.com',
     hireDate: '2020-06-01',
-    salary: 95000,
+    salary: convertUSDToMWK(95000),
     status: 'active',
     certifications: ['Security Management', 'Business Administration']
   }
@@ -165,36 +224,36 @@ export const mockEmployees: Employee[] = [
 export const mockSites: Site[] = [
   {
     id: '1',
-    name: 'Downtown Plaza',
-    address: '123 Main St, Downtown',
-    coordinates: { lat: 40.7128, lng: -74.0060 },
+    name: 'City Centre Lilongwe',
+    address: 'Area 10, Lilongwe',
+    coordinates: { lat: -13.9626, lng: 33.7741 },
     status: 'active',
     guards: ['1', '3'],
     checkpoints: ['cp1', 'cp2', 'cp3'],
-    contractValue: 250000,
-    clientContact: 'Plaza Management LLC'
+    contractValue: convertUSDToMWK(250000),
+    clientContact: 'City Centre Management Ltd'
   },
   {
     id: '2',
-    name: 'Corporate Center',
-    address: '456 Business Ave, Corporate District',
-    coordinates: { lat: 40.7589, lng: -73.9851 },
+    name: 'Capital Hill Complex',
+    address: 'Capital Hill, Lilongwe',
+    coordinates: { lat: -13.9833, lng: 33.7833 },
     status: 'active',
     guards: ['2'],
     checkpoints: ['cp4', 'cp5'],
-    contractValue: 180000,
-    clientContact: 'Corporate Holdings Inc'
+    contractValue: convertUSDToMWK(180000),
+    clientContact: 'Government Complex Authority'
   },
   {
     id: '3',
-    name: 'Shopping Mall',
-    address: '789 Commerce Blvd, Retail District',
-    coordinates: { lat: 40.7505, lng: -73.9934 },
+    name: 'Lilongwe Shopping Centre',
+    address: 'Old Town, Lilongwe',
+    coordinates: { lat: -13.9700, lng: 33.7900 },
     status: 'active',
     guards: ['3'],
     checkpoints: ['cp6', 'cp7', 'cp8'],
-    contractValue: 320000,
-    clientContact: 'Mall Operators Group'
+    contractValue: convertUSDToMWK(320000),
+    clientContact: 'Lilongwe Retail Properties'
   }
 ];
 
@@ -209,7 +268,7 @@ export const mockIncidents: Incident[] = [
     reportedBy: 'John Smith',
     reportedAt: '2024-01-20T14:30:00Z',
     location: 'Employee Entrance',
-    site: 'Downtown Plaza',
+    site: 'City Centre Lilongwe',
     category: 'Security Concern'
   },
   {
@@ -221,7 +280,7 @@ export const mockIncidents: Incident[] = [
     reportedBy: 'Sarah Johnson',
     reportedAt: '2024-01-20T09:15:00Z',
     location: 'North Corridor',
-    site: 'Corporate Center',
+    site: 'Capital Hill Complex',
     category: 'Equipment'
   },
   {
@@ -233,7 +292,7 @@ export const mockIncidents: Incident[] = [
     reportedBy: 'Mike Rodriguez',
     reportedAt: '2024-01-19T16:45:00Z',
     location: 'Food Court',
-    site: 'Shopping Mall',
+    site: 'Lilongwe Shopping Centre',
     category: 'Medical'
   }
 ];
@@ -244,7 +303,7 @@ export const mockShifts: Shift[] = [
     id: '1',
     guardId: '1',
     guardName: 'John Smith',
-    site: 'Downtown Plaza',
+    site: 'City Centre Lilongwe',
     startTime: '2024-01-21T08:00:00Z',
     endTime: '2024-01-21T16:00:00Z',
     status: 'active',
@@ -255,7 +314,7 @@ export const mockShifts: Shift[] = [
     id: '2',
     guardId: '3',
     guardName: 'Mike Rodriguez',
-    site: 'Shopping Mall',
+    site: 'Lilongwe Shopping Centre',
     startTime: '2024-01-20T22:00:00Z',
     endTime: '2024-01-21T06:00:00Z',
     status: 'completed',
@@ -266,7 +325,7 @@ export const mockShifts: Shift[] = [
     id: '3',
     guardId: '2',
     guardName: 'Sarah Johnson',
-    site: 'Corporate Center',
+    site: 'Capital Hill Complex',
     startTime: '2024-01-21T12:00:00Z',
     endTime: '2024-01-21T20:00:00Z',
     status: 'scheduled',
@@ -281,7 +340,7 @@ export const mockCheckpoints: Checkpoint[] = [
     id: 'cp1',
     name: 'Main Entrance',
     location: 'Front Lobby',
-    site: 'Downtown Plaza',
+    site: 'City Centre Lilongwe',
     qrCode: 'QR001',
     lastChecked: '2024-01-21T10:30:00Z',
     checkedBy: 'John Smith',
@@ -291,7 +350,7 @@ export const mockCheckpoints: Checkpoint[] = [
     id: 'cp2',
     name: 'Parking Garage',
     location: 'Level B1',
-    site: 'Downtown Plaza',
+    site: 'City Centre Lilongwe',
     qrCode: 'QR002',
     lastChecked: '2024-01-21T11:00:00Z',
     checkedBy: 'John Smith',
@@ -301,7 +360,7 @@ export const mockCheckpoints: Checkpoint[] = [
     id: 'cp3',
     name: 'Emergency Exit',
     location: 'East Wing',
-    site: 'Downtown Plaza',
+    site: 'City Centre Lilongwe',
     qrCode: 'QR003',
     coordinates: { lat: 40.7127, lng: -74.0059 }
   }
@@ -316,12 +375,12 @@ export const mockPayrollRecords: PayrollRecord[] = [
     period: '2024-01-01 to 2024-01-15',
     regularHours: 80,
     overtimeHours: 5,
-    regularRate: 22.50,
-    overtimeRate: 33.75,
-    grossPay: 1968.75,
-    taxes: 315.00,
-    benefits: 125.00,
-    netPay: 1528.75,
+    regularRate: convertUSDToMWK(22.50),
+    overtimeRate: convertUSDToMWK(33.75),
+    grossPay: convertUSDToMWK(1968.75),
+    taxes: convertUSDToMWK(315.00),
+    benefits: convertUSDToMWK(125.00),
+    netPay: convertUSDToMWK(1528.75),
     status: 'processed'
   },
   {
@@ -331,12 +390,12 @@ export const mockPayrollRecords: PayrollRecord[] = [
     period: '2024-01-01 to 2024-01-15',
     regularHours: 80,
     overtimeHours: 8,
-    regularRate: 23.50,
-    overtimeRate: 35.25,
-    grossPay: 2162.00,
-    taxes: 345.92,
-    benefits: 125.00,
-    netPay: 1691.08,
+    regularRate: convertUSDToMWK(23.50),
+    overtimeRate: convertUSDToMWK(35.25),
+    grossPay: convertUSDToMWK(2162.00),
+    taxes: convertUSDToMWK(345.92),
+    benefits: convertUSDToMWK(125.00),
+    netPay: convertUSDToMWK(1691.08),
     status: 'processed'
   },
   {
@@ -346,12 +405,12 @@ export const mockPayrollRecords: PayrollRecord[] = [
     period: '2024-01-01 to 2024-01-15',
     regularHours: 80,
     overtimeHours: 3,
-    regularRate: 31.25,
-    overtimeRate: 46.88,
-    grossPay: 2640.64,
-    taxes: 422.50,
-    benefits: 150.00,
-    netPay: 2068.14,
+    regularRate: convertUSDToMWK(31.25),
+    overtimeRate: convertUSDToMWK(46.88),
+    grossPay: convertUSDToMWK(2640.64),
+    taxes: convertUSDToMWK(422.50),
+    benefits: convertUSDToMWK(150.00),
+    netPay: convertUSDToMWK(2068.14),
     status: 'paid'
   }
 ];
@@ -362,7 +421,7 @@ export const mockExpenses: Expense[] = [
     id: '1',
     category: 'equipment',
     description: 'New security radios (5 units)',
-    amount: 1250.00,
+    amount: convertUSDToMWK(1250.00),
     date: '2024-01-15',
     submittedBy: 'Sarah Johnson',
     status: 'approved'
@@ -371,7 +430,7 @@ export const mockExpenses: Expense[] = [
     id: '2',
     category: 'training',
     description: 'CPR/First Aid certification course',
-    amount: 350.00,
+    amount: convertUSDToMWK(350.00),
     date: '2024-01-18',
     submittedBy: 'Emily Davis',
     status: 'pending'
@@ -380,7 +439,7 @@ export const mockExpenses: Expense[] = [
     id: '3',
     category: 'vehicle',
     description: 'Patrol vehicle fuel and maintenance',
-    amount: 285.50,
+    amount: convertUSDToMWK(285.50),
     date: '2024-01-19',
     submittedBy: 'John Smith',
     status: 'approved'
@@ -389,19 +448,19 @@ export const mockExpenses: Expense[] = [
 
 // Financial Summary Data
 export const mockFinancialSummary = {
-  monthlyRevenue: 245000,
-  monthlyExpenses: 185000,
-  netProfit: 60000,
+  monthlyRevenue: convertUSDToMWK(245000),
+  monthlyExpenses: convertUSDToMWK(185000),
+  netProfit: convertUSDToMWK(60000),
   profitMargin: 24.5,
   totalContracts: 32,
   activeGuards: 48,
   overhead: {
-    payroll: 120000,
-    equipment: 15000,
-    training: 8000,
-    vehicles: 12000,
-    insurance: 18000,
-    other: 12000
+    payroll: convertUSDToMWK(120000),
+    equipment: convertUSDToMWK(15000),
+    training: convertUSDToMWK(8000),
+    vehicles: convertUSDToMWK(12000),
+    insurance: convertUSDToMWK(18000),
+    other: convertUSDToMWK(12000)
   }
 };
 
@@ -417,11 +476,11 @@ export const mockAnalytics = {
     { month: 'Jan', incidents: 7 }
   ],
   checkpointCompliance: [
-    { site: 'Downtown Plaza', compliance: 95 },
-    { site: 'Corporate Center', compliance: 88 },
-    { site: 'Shopping Mall', compliance: 92 },
-    { site: 'Warehouse District', compliance: 78 },
-    { site: 'Medical Center', compliance: 98 }
+    { site: 'City Centre Lilongwe', compliance: 95 },
+    { site: 'Capital Hill Complex', compliance: 88 },
+    { site: 'Lilongwe Shopping Centre', compliance: 92 },
+    { site: 'Industrial Area', compliance: 78 },
+    { site: 'Kamuzu Central Hospital', compliance: 98 }
   ],
   guardPerformance: [
     { guard: 'John Smith', score: 94 },
@@ -463,5 +522,178 @@ export const mockEquipment = [
     lastMaintenance: '2024-01-15',
     nextMaintenance: '2024-01-22',
     condition: 'needs_repair'
+  }
+];
+
+// Mock Clients for Assignment Management
+export const mockClients: Client[] = [
+  {
+    id: '1',
+    name: 'Kamuzu Central Hospital',
+    contactPerson: 'Dr. James Phiri',
+    email: 'security@kch.mw',
+    phone: formatMalawianPhone('0888789456'),
+    address: 'PO Box 149',
+    city: 'Lilongwe',
+    contractValue: convertUSDToMWK(45000),
+    contractStartDate: '2024-01-01',
+    contractEndDate: '2024-12-31',
+    status: 'active',
+    requiresCanines: true,
+    sitesCount: 3,
+    notes: 'High security hospital requiring 24/7 coverage'
+  },
+  {
+    id: '2',
+    name: 'Lilongwe Shopping Centre',
+    contactPerson: 'Mary Banda',
+    email: 'security@lsc.mw',
+    phone: formatMalawianPhone('0887456789'),
+    address: 'City Centre',
+    city: 'Lilongwe',
+    contractValue: convertUSDToMWK(32000),
+    contractStartDate: '2024-02-01',
+    contractEndDate: '2025-01-31',
+    status: 'active',
+    requiresCanines: false,
+    sitesCount: 1,
+    notes: 'Shopping mall with multiple entrances'
+  },
+  {
+    id: '3',
+    name: 'Capital Hill Complex',
+    contactPerson: 'John Mwale',
+    email: 'facilities@caphill.gov.mw',
+    phone: formatMalawianPhone('0886234567'),
+    address: 'Capital Hill',
+    city: 'Lilongwe',
+    contractValue: convertUSDToMWK(78000),
+    contractStartDate: '2024-01-15',
+    contractEndDate: '2025-01-14',
+    status: 'active',
+    requiresCanines: true,
+    sitesCount: 5,
+    notes: 'Government complex requiring highest security clearance'
+  }
+];
+
+// Mock Guard Resources for Assignment Management
+export const mockGuardResources: GuardResource[] = [
+  {
+    id: 'g1',
+    name: 'Francis Phiri',
+    badge: 'GRD-001',
+    role: 'Senior Guard',
+    experience: 8,
+    certifications: ['Basic Security', 'Fire Safety', 'First Aid'],
+    status: 'available',
+    location: 'Lilongwe',
+    phoneNumber: formatMalawianPhone('0999123456'),
+    specializations: ['Hospital Security', 'Emergency Response']
+  },
+  {
+    id: 'g2',
+    name: 'Grace Banda',
+    badge: 'GRD-002',
+    role: 'Guard',
+    experience: 3,
+    certifications: ['Basic Security', 'Customer Service'],
+    status: 'assigned',
+    location: 'Lilongwe',
+    phoneNumber: formatMalawianPhone('0999234567'),
+    specializations: ['Retail Security', 'Access Control']
+  },
+  {
+    id: 'g3',
+    name: 'Peter Mwale',
+    badge: 'GRD-003',
+    role: 'Guard Captain',
+    experience: 12,
+    certifications: ['Advanced Security', 'Leadership', 'Crisis Management'],
+    status: 'available',
+    location: 'Lilongwe',
+    phoneNumber: formatMalawianPhone('0999345678'),
+    specializations: ['VIP Protection', 'Team Leadership']
+  },
+  {
+    id: 'g4',
+    name: 'Alice Tembo',
+    badge: 'GRD-004',
+    role: 'Guard',
+    experience: 5,
+    certifications: ['Basic Security', 'CCTV Operations'],
+    status: 'available',
+    location: 'Blantyre',
+    phoneNumber: formatMalawianPhone('0999456789'),
+    specializations: ['CCTV Monitoring', 'Report Writing']
+  }
+];
+
+// Mock Canines for Assignment Management
+export const mockCanines: Canine[] = [
+  {
+    id: 'c1',
+    name: 'Rex',
+    breed: 'German Shepherd',
+    age: 5,
+    handler: 'Francis Phiri',
+    certifications: ['Drug Detection', 'Patrol', 'Protection'],
+    status: 'available',
+    specialization: ['Drug Detection', 'Perimeter Security'],
+    lastVetCheck: '2024-01-15'
+  },
+  {
+    id: 'c2',
+    name: 'Luna',
+    breed: 'Belgian Malinois',
+    age: 3,
+    handler: 'Peter Mwale',
+    certifications: ['Explosives Detection', 'Tracking'],
+    status: 'assigned',
+    specialization: ['Explosives Detection', 'VIP Protection'],
+    lastVetCheck: '2024-01-20'
+  },
+  {
+    id: 'c3',
+    name: 'Max',
+    breed: 'Labrador',
+    age: 4,
+    handler: 'James Nyirenda',
+    certifications: ['Search and Rescue', 'Patrol'],
+    status: 'available',
+    specialization: ['Search Operations', 'Public Safety'],
+    lastVetCheck: '2024-01-10'
+  }
+];
+
+// Mock Assignments
+export const mockAssignments: Assignment[] = [
+  {
+    id: 'a1',
+    clientId: '1',
+    guardIds: ['g2'],
+    canineIds: ['c2'],
+    siteName: 'Main Hospital Building',
+    startDate: '2024-01-01',
+    shiftType: '24hour',
+    status: 'active',
+    requirements: '24/7 security with canine support for drug detection',
+    budget: convertUSDToMWK(15000),
+    createdBy: 'admin',
+    createdAt: '2023-12-15'
+  },
+  {
+    id: 'a2',
+    clientId: '2',
+    guardIds: ['g1', 'g4'],
+    canineIds: [],
+    siteName: 'Shopping Centre Main Entrance',
+    startDate: '2024-02-01',
+    shiftType: 'day',
+    status: 'active',
+    requirements: 'Day shift coverage for main entrance and CCTV monitoring',
+    budget: convertUSDToMWK(8000),
+    createdBy: 'supervisor',
+    createdAt: '2024-01-15'
   }
 ];

@@ -96,7 +96,7 @@ class CCTVService {
       const { cameras } = await apiCall('/cctv/cameras');
       return cameras || [];
     } catch (error) {
-      console.error('Failed to fetch cameras:', error);
+      console.log('Using mock data for cameras:', error.message);
       return this.getMockCameras();
     }
   }
@@ -164,7 +164,7 @@ class CCTVService {
       const { zones } = await apiCall('/cctv/geofence/zones');
       return zones || [];
     } catch (error) {
-      console.error('Failed to fetch geofence zones:', error);
+      console.log('Using mock data for geofence zones:', error.message);
       return this.getMockGeofenceZones();
     }
   }
@@ -222,7 +222,7 @@ class CCTVService {
       const { events } = await apiCall(`/cctv/events?limit=${limit}`);
       return events || [];
     } catch (error) {
-      console.error('Failed to fetch CCTV events:', error);
+      console.log('Using mock data for CCTV events:', error.message);
       return this.getMockCCTVEvents();
     }
   }
@@ -284,7 +284,7 @@ class CCTVService {
       const { recordings } = await apiCall(url);
       return recordings || [];
     } catch (error) {
-      console.error('Failed to fetch recordings:', error);
+      console.log('Using mock data for recordings:', error.message);
       return this.getMockRecordings();
     }
   }
@@ -391,7 +391,7 @@ class CCTVService {
       const { health } = await apiCall('/cctv/system/health');
       return health;
     } catch (error) {
-      console.error('Failed to fetch system health:', error);
+      console.log('Using mock data for system health:', error.message);
       return {
         total_cameras: 12,
         online_cameras: 10,
